@@ -27,6 +27,8 @@ class CardView: UIView {
         
         backView.contentMode = .scaleAspectFit
         faceView.contentMode = .scaleAspectFit
+        // face is hidden by default
+        faceView.isHidden = true
         
         backView.backgroundColor = UIColor.white
         layer.borderWidth = 1
@@ -59,22 +61,47 @@ class CardView: UIView {
         view.addGestureRecognizer(touchRecognizer)
     }
     
-    
-    @objc func flipView(sender: UITapGestureRecognizer) {
+    func showFace() {
+        if faceView.isHidden {
+            flipView()
+        }
+    }
         
-        if let imageView = sender.view as? UIImageView {
-            let faceView = imageView.superview?.subviews.filter { $0 != imageView }.first
-            if let face = faceView {
-                UIView.transition(from: imageView,
-                                  to: face,
-                                  duration: 0.3,
-                                  options: [.transitionFlipFromRight, .showHideTransitionViews]) { finished in
-                                    if finished {
+    func showBack() {
+        if backView.isHidden {
+            flipView()
+        }
+    }
+    
+    func flipView() {
+        if faceView.isHidden {
+            flip(from: backView, to: faceView, animated: true, isUserInitiated: false)
+        }
+        else {
+            flip(from: faceView, to: backView, animated: true, isUserInitiated: false)
+        }
+    }
+    
+    private func flip(from: UIView, to: UIView, animated: Bool, isUserInitiated: Bool) {
+        if animated {
+            UIView.transition(from: from,
+                              to: to,
+                              duration: 0.3,
+                              options: [.transitionFlipFromRight, .showHideTransitionViews]) { finished in
+                                if finished {
+                                    if isUserInitiated {
                                         self.delegate?.didFlipped(cardView: self)
                                     }
-                }
+                                }
             }
         }
-        
+        else {
+            from.isHidden = true
+            to.isHidden = false
+        }
+    }
+    
+    @objc private func flipView(sender: UITapGestureRecognizer) {
+        flip(from: backView, to: faceView, animated: true, isUserInitiated: true)
     }
 }
