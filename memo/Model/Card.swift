@@ -10,11 +10,13 @@ import Foundation
 
 struct Card: Equatable {
     
-    var isOpened: Bool
+    var isFlipped: Bool
     var isMatched: Bool
-    var isFlipped: Bool {
-        return isOpened || isMatched
+    
+    var isOpened: Bool {
+        return (isFlipped || isMatched)
     }
+    
     var imageName: String
     
     static func ==(lhs: Card, rhs: Card) -> Bool {

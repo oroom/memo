@@ -9,63 +9,86 @@
 import UIKit
 
 class GameViewController: UIViewController, CardViewDelegate {
-
-    private var cardsContainer: CardsContainer!
+    
+    private var restartButton: UIButton!
+    private var cardsContainer: CardsContainer?
     var cardViews = [CardView]()
     var game: Game!
+    let cardPairs = 2
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let cardPairs = 8
         game = Game(cardPairs: cardPairs)
         createGame(cards: game.cards)
+        
+        restartButton = UIButton()
+        restartButton.addTarget(self, action: #selector(restartGame), for: .touchUpInside)
+        restartButton.setTitle("Start", for: .normal)
+        restartButton.isEnabled = false
+        
+        layoutElements()
+        let center = NotificationCenter.default
+        center.addObserver(self, selector: #selector(gameUpdated), name: NSNotification.Name(rawValue: "gameChanged"), object: nil)
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    private func createGame(cards: [Card]) {
+    
+    @objc func gameUpdated() {
+        for (index, card) in game.cards.enumerated() {
+            if card.isOpened != cardViews[index].isOpened {
+                cardViews[index].flipView()
+            }
+        }
+        
+        restartButton.isEnabled = game.isFinished
+    }
+    
+    func createGame(cards: [Card]) {
+        // clear existed game
+        cardsContainer?.removeFromSuperview()
+        cardViews = [CardView]()
+        
         createContainer()
         
         for card in cards {
-            let cardView = CardView(faceName: card.imageName)
-            
-            cardView.addTouch()
+            let cardView = CardView(faceName: card.imageName, isOpened: card.isOpened)
             cardViews.append(cardView)
-            self.cardsContainer.addSubview(cardView)
+            self.cardsContainer?.addSubview(cardView)
             cardView.delegate = self
             cardView.translatesAutoresizingMaskIntoConstraints = false
-            if card.isFlipped {
-                cardView.flipView()
-            }
         }
         
-        cardsContainer.layout()
+        cardsContainer?.layout()
     }
     
-    private func updateGame() {
-        for (index, card) in game.cards.enumerated() {
-            let cardView = cardViews[index]
-            if card.isFlipped {
-                cardView.showFace()
-            }
-            else {
-                cardView.showBack()
-            }
-        }
+    @objc func restartGame() {
+        game = Game(cardPairs: cardPairs)
+        createGame(cards: game.cards)
+    }
+    
+    private func layoutElements() {
+        restartButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(restartButton)
+        
+        restartButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16).isActive = true
+        restartButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        restartButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        
+        restartButton.backgroundColor = UIColor.green
     }
     
     private func createContainer() {
         cardsContainer = CardsContainer()
-        cardsContainer.backgroundColor = UIColor.lightGray
-        view.addSubview(cardsContainer)
-        cardsContainer.translatesAutoresizingMaskIntoConstraints = false
-        cardsContainer.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        cardsContainer.widthAnchor.constraint(equalTo: cardsContainer.heightAnchor).isActive = true
-        cardsContainer.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        cardsContainer.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        cardsContainer?.backgroundColor = UIColor.lightGray
+        view.addSubview(cardsContainer!)
+        cardsContainer?.translatesAutoresizingMaskIntoConstraints = false
+        cardsContainer?.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        cardsContainer?.widthAnchor.constraint(equalTo: (cardsContainer?.heightAnchor)!).isActive = true
+        cardsContainer?.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        cardsContainer?.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
     }
     
     private func indexFor(card: CardView?) -> Int? {
@@ -79,7 +102,7 @@ class GameViewController: UIViewController, CardViewDelegate {
         if let tappedIndex = indexFor(card: cardView) {
             game.cardFlipped(at: tappedIndex)
         }
-        updateGame()
     }
     
 }
+

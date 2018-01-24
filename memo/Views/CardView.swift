@@ -2,7 +2,7 @@
 //  CardView.swift
 //  memo
 //
-//  Created by Dzimtry Navak on 1/15/18.
+//  Created by Artsiom Sadyryn on 1/15/18.
 //  Copyright © 2018 Artsiom Sadyryn. All rights reserved.
 //
 
@@ -17,18 +17,22 @@ class CardView: UIView {
     
     weak var delegate: CardViewDelegate?
     
+    var isOpened: Bool {
+        return backView.isHidden
+    }
+    
     private var faceView: UIImageView
     private var backView: UIImageView
     
-    init(faceName: String) {
+    init(faceName: String, isOpened: Bool) {
         faceView = UIImageView(image: UIImage(named: faceName))
+        faceView.isHidden = !isOpened
         backView = UIImageView(image: UIImage(named: "card_back")?.withRenderingMode(.alwaysTemplate))
+        backView.isHidden = isOpened
         super.init(frame: CGRect.zero)
         
         backView.contentMode = .scaleAspectFit
         faceView.contentMode = .scaleAspectFit
-        // face is hidden by default
-        faceView.isHidden = true
         
         backView.backgroundColor = UIColor.white
         layer.borderWidth = 1
@@ -36,6 +40,8 @@ class CardView: UIView {
         
         add(subview: faceView, to: self)
         add(subview: backView, to: self)
+        
+        addTouch()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -61,47 +67,26 @@ class CardView: UIView {
         view.addGestureRecognizer(touchRecognizer)
     }
     
-    func showFace() {
-        if faceView.isHidden {
-            flipView()
-        }
-    }
-        
-    func showBack() {
-        if backView.isHidden {
-            flipView()
-        }
-    }
-    
     func flipView() {
-        if faceView.isHidden {
-            flip(from: backView, to: faceView, animated: true, isUserInitiated: false)
-        }
-        else {
-            flip(from: faceView, to: backView, animated: true, isUserInitiated: false)
-        }
+        let fromView = backView.isHidden ? faceView : backView
+        let toView = backView.isHidden ? backView : faceView
+        flipView(from: fromView, to: toView, userInitiated: false)
     }
     
-    private func flip(from: UIView, to: UIView, animated: Bool, isUserInitiated: Bool) {
-        if animated {
-            UIView.transition(from: from,
-                              to: to,
-                              duration: 0.3,
-                              options: [.transitionFlipFromRight, .showHideTransitionViews]) { finished in
-                                if finished {
-                                    if isUserInitiated {
+    @objc func flipView(sender: UITapGestureRecognizer) {
+        flipView(from: backView, to: faceView, userInitiated: true)
+    }
+    
+    private func flipView(from: UIImageView, to: UIImageView, userInitiated: Bool) {
+                UIView.transition(from: from,
+                                  to: to,
+                                  duration: 0.3,
+                                  options: [.transitionFlipFromRight, .showHideTransitionViews]) { finished in
+                                    if finished && userInitiated {
                                         self.delegate?.didFlipped(cardView: self)
                                     }
                                 }
-            }
-        }
-        else {
-            from.isHidden = true
-            to.isHidden = false
-        }
-    }
-    
-    @objc private func flipView(sender: UITapGestureRecognizer) {
-        flip(from: backView, to: faceView, animated: true, isUserInitiated: true)
     }
 }
+
+

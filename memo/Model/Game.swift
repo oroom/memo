@@ -16,7 +16,12 @@ class Game {
     var flippedCard: Int?
     var cards: [Card]
     
+    private var steps: Int = 0
+    private var dateStarted: Date
+    
     init(cardPairs: Int) {
+        
+        dateStarted = Date()
         
         if cardPairs > 18 {
             self.cardPairs = 18
@@ -38,8 +43,8 @@ class Game {
         }
 
         for name in names {
-            let card = Card(isOpened: false, isMatched: false, imageName: name)
-            let card2 = Card(isOpened: false, isMatched: false, imageName: name)
+            let card = Card(isFlipped: false, isMatched: false, imageName: name)
+            let card2 = Card(isFlipped: false, isMatched: false, imageName: name)
             cards.append(card)
             cards.append(card2)
         }
@@ -48,7 +53,7 @@ class Game {
     }
     
     func cardFlipped(at index: Int) {
-        cards[index].isOpened = true
+        cards[index].isFlipped = true
         if let flipped = flippedCard {
             twoCardsFlipped(cardOne: flipped, cardTwo: index)
             flippedCard = nil
@@ -56,24 +61,35 @@ class Game {
         else {
             flippedCard = index
         }
+        
+        let center = NotificationCenter.default
+        center.post(name: NSNotification.Name(rawValue: "gameChanged"), object: nil)
     }
     
     func twoCardsFlipped(cardOne: Int, cardTwo: Int) -> Bool {
+        steps += 1
         if cards[cardOne] == cards[cardTwo] {
             cards[cardOne].isMatched = true
             cards[cardTwo].isMatched = true
             let cardsRemained = cards.filter { !($0.isFlipped) }.count
             if cardsRemained == 0 {
                 isFinished = true
-                print("Game finished")
+                print("game finished")
+                gameFinished()
             }
             return true
         }
         else {
-            cards[cardOne].isOpened = false
-            cards[cardTwo].isOpened = false
+            cards[cardOne].isFlipped = false
+            cards[cardTwo].isFlipped = false
             return false
         }
+    }
+    
+    private func gameFinished() {
+        let timePassed = Date().timeIntervalSince(dateStarted)
+        let gameResult = GameResult(pairs: cards.count/2, steps: steps, time: timePassed)
+        StatsService().save(results: gameResult)
     }
 
 }
