@@ -29,6 +29,7 @@ class ResultViewController: UIViewController, UITableViewDataSource {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         results = gameService.getResults()
+        table.reloadData()
         let result = results?.first
         resultLabel.text = "Last game stats: \(result?.pairs) \(result?.steps) \(result?.time)"
     }
