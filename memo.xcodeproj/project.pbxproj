@@ -22,6 +22,9 @@
 		DC463C302019007800210093 /* View+Subview.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC463C2F2019007800210093 /* View+Subview.swift */; };
 		DCC67602201650C10060B97A /* GameResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC67601201650C10060B97A /* GameResult.swift */; };
 		DCC67605201654EC0060B97A /* StatsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC67604201654EC0060B97A /* StatsService.swift */; };
+		DCF9E2FD201BA952006AF783 /* ResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF9E2FC201BA952006AF783 /* ResultTableViewCell.swift */; };
+		DCF9E2FF201BAAC6006AF783 /* ResultTableviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DCF9E2FE201BAAC6006AF783 /* ResultTableviewCell.xib */; };
+		DCF9E301201F9A9E006AF783 /* BestResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF9E300201F9A9E006AF783 /* BestResultTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +47,9 @@
 		DC463C2F2019007800210093 /* View+Subview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Subview.swift"; sourceTree = "<group>"; };
 		DCC67601201650C10060B97A /* GameResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameResult.swift; sourceTree = "<group>"; };
 		DCC67604201654EC0060B97A /* StatsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsService.swift; sourceTree = "<group>"; };
+		DCF9E2FC201BA952006AF783 /* ResultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultTableViewCell.swift; sourceTree = "<group>"; };
+		DCF9E2FE201BAAC6006AF783 /* ResultTableviewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ResultTableviewCell.xib; sourceTree = "<group>"; };
+		DCF9E300201F9A9E006AF783 /* BestResultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BestResultTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +78,9 @@
 			children = (
 				7BED36F0200933F700A9E3E0 /* CardsContainer.swift */,
 				7B121BBF200D00B7001E7D3A /* CardView.swift */,
+				DCF9E2FC201BA952006AF783 /* ResultTableViewCell.swift */,
+				DCF9E2FE201BAAC6006AF783 /* ResultTableviewCell.xib */,
+				DCF9E300201F9A9E006AF783 /* BestResultTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -219,6 +228,7 @@
 			files = (
 				7BF67A9E1FF40FDF0098F9CF /* LaunchScreen.storyboard in Resources */,
 				7BF67A9B1FF40FDF0098F9CF /* Assets.xcassets in Resources */,
+				DCF9E2FF201BAAC6006AF783 /* ResultTableviewCell.xib in Resources */,
 				7BF67A991FF40FDF0098F9CF /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -289,11 +299,13 @@
 				7BED36F1200933F700A9E3E0 /* CardsContainer.swift in Sources */,
 				7B3A41D72003D7F300A453DC /* Card.swift in Sources */,
 				7B3A41DA2003DC6400A453DC /* ArrayShuffle.swift in Sources */,
+				DCF9E301201F9A9E006AF783 /* BestResultTableViewCell.swift in Sources */,
 				DCC67605201654EC0060B97A /* StatsService.swift in Sources */,
 				7BF67AA61FF413B70098F9CF /* ResultViewController.swift in Sources */,
 				DC463C302019007800210093 /* View+Subview.swift in Sources */,
 				7B121BC0200D00B7001E7D3A /* CardView.swift in Sources */,
 				7B3A41D52003D7E900A453DC /* Game.swift in Sources */,
+				DCF9E2FD201BA952006AF783 /* ResultTableViewCell.swift in Sources */,
 				DCC67602201650C10060B97A /* GameResult.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
